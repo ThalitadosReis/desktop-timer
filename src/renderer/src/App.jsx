@@ -1,5 +1,15 @@
 import { useState, useEffect, useRef } from 'react'
-import { Play, Settings, RefreshCw, Pause, X, ChevronLeft, ChevronRight } from 'lucide-react'
+import {
+  Play,
+  Settings,
+  RefreshCw,
+  Pause,
+  X,
+  ChevronLeft,
+  ChevronRight,
+  Sun,
+  Moon
+} from 'lucide-react'
 
 function App() {
   // default settings
@@ -9,6 +19,9 @@ function App() {
     longBreak: 15 * 60,
     sessionsBeforeLongBreak: 4
   })
+
+  // theme state
+  const [isDarkMode, setIsDarkMode] = useState(false)
 
   // the timer state
   const [timeLeft, setTimeLeft] = useState(settings.focusTime)
@@ -22,6 +35,11 @@ function App() {
   const shortBreakRef = useRef(null)
   const longBreakRef = useRef(null)
   const sessionsRef = useRef(null)
+
+  // theme toggle effect
+  useEffect(() => {
+    document.documentElement.classList.toggle('dark', isDarkMode)
+  }, [isDarkMode])
 
   // the timer logic
   useEffect(() => {
@@ -108,7 +126,7 @@ function App() {
         break
     }
 
-    // top the timer when settings are saved
+    // stop the timer when settings are saved
     setIsRunning(false)
     setIsSettingsOpen(false)
   }
@@ -145,7 +163,31 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center relative bg-slate-50 text-slate-900">
+    <div
+      className={`min-h-screen flex items-center justify-center relative 
+      ${isDarkMode ? 'bg-slate-900 text-slate-50' : 'bg-slate-50 text-slate-900'}`}
+    >
+      <div className="absolute top-4 right-4 flex items-center">
+        <div
+          className={`w-16 h-8 p-2 rounded-full relative transition-colors duration-300 
+            ${isDarkMode ? 'bg-slate-700' : 'bg-slate-300'}`}
+          onClick={() => setIsDarkMode(!isDarkMode)}
+        >
+          {/* Sliding toggle background */}
+          <div
+            className={`absolute top-1 w-6 h-6 rounded-full transition-transform duration-300 flex items-center justify-center
+              ${isDarkMode ? 'translate-x-[100%] bg-slate-800' : 'translate-x-[0%] bg-white'}
+              transform`}
+          >
+            {isDarkMode ? (
+              <Moon size={16} className="text-slate-100" />
+            ) : (
+              <Sun size={16} className="text-slate-800" />
+            )}
+          </div>
+        </div>
+      </div>
+
       <div className="w-full max-w-md px-4">
         {/* timer display */}
         <div className="relative w-64 h-64 mx-auto mb-6">
@@ -158,7 +200,7 @@ function App() {
               fill="none"
               stroke="currentColor"
               strokeWidth="4"
-              className="text-slate-200"
+              className={`${isDarkMode ? 'text-slate-600' : 'text-slate-200'}`}
             />
           </svg>
 
@@ -173,7 +215,7 @@ function App() {
               strokeWidth="4"
               strokeDasharray="283"
               strokeDashoffset={283 - (calculateProgress() * 283) / 360}
-              className="text-slate-800"
+              className={`${isDarkMode ? 'text-slate-300' : 'text-slate-800'}`}
               transform="rotate(-90 50 50)"
             />
           </svg>
@@ -181,40 +223,74 @@ function App() {
           <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
             {/* session display */}
             <div className="text-center">
-              <span className="text-xs uppercase text-slate-600">{formatMode(mode)}</span>
+              <span
+                className={`text-xs uppercase ${isDarkMode ? 'text-slate-400' : 'text-slate-600'}`}
+              >
+                {formatMode(mode)}
+              </span>
             </div>
-            <div className=" text-5xl font-bold text-slate-900">{formatTime(timeLeft)}</div>
-            <div className="text-center text-xs font-light mt-1 text-slate-600">
+            <div
+              className={`text-5xl font-bold ${isDarkMode ? 'text-slate-50' : 'text-slate-900'}`}
+            >
+              {formatTime(timeLeft)}
+            </div>
+            <div
+              className={`text-center text-xs font-light mt-1 ${isDarkMode ? 'text-slate-400' : 'text-slate-600'}`}
+            >
               {completedSessions} / {settings.sessionsBeforeLongBreak} Sessions
             </div>
           </div>
         </div>
 
         {/* control buttons */}
-        <div className="flex justify-center space-x-4 mb-4">
+        <div className="flex items-center justify-center space-x-4">
+          <button
+            onClick={resetTimer}
+            className={`p-2 rounded-full 
+              ${isDarkMode ? 'bg-slate-700 text-slate-200' : 'bg-slate-200 text-slate-800'}`}
+          >
+            <RefreshCw />
+          </button>
           {!isRunning ? (
-            <button onClick={startTimer} className="p-2 rounded-full bg-slate-800 text-white">
+            <button
+              onClick={startTimer}
+              className={`p-4 rounded-full 
+                ${isDarkMode ? 'bg-slate-200 text-slate-700' : 'bg-slate-800 text-white'}`}
+            >
               <Play />
             </button>
           ) : (
-            <button onClick={pauseTimer} className="p-2 rounded-full bg-slate-200 text-slate-800">
+            <button
+              onClick={pauseTimer}
+              className={`p-4 rounded-full 
+                ${isDarkMode ? 'bg-slate-200 text-slate-700' : 'bg-slate-800 text-white'}`}
+            >
               <Pause />
             </button>
           )}
-          <button onClick={resetTimer} className="p-2 rounded-full bg-slate-200 text-slate-800">
-            <RefreshCw />
+
+          <button
+            onClick={() => setIsSettingsOpen(true)}
+            className={`p-2 rounded-full 
+              ${isDarkMode ? 'bg-slate-700 text-slate-200' : 'bg-slate-200 text-slate-800'}`}
+          >
+            <Settings />
           </button>
         </div>
 
         {/* settings modal */}
         {isSettingsOpen && (
-          <div className="fixed inset-0 bg-white bg-opacity-20 flex items-center justify-center z-50">
+          <div
+            className={`fixed inset-0 flex items-center justify-center z-50 
+            ${isDarkMode ? 'bg-slate-800 text-slate-200' : 'bg-white text-slate-900'}`}
+          >
             <div className="p-6 w-full max-w-md">
               <div className="flex justify-between items-center mb-4">
-                <h2 className="m-auto text-slate-900">Settings</h2>
+                <h2 className="m-auto text-xl font-semibold">Settings</h2>
                 <button
                   onClick={() => setIsSettingsOpen(false)}
-                  className="text-slate-600 hover:text-slate-900 transition-colors"
+                  className={`
+                    ${isDarkMode ? 'text-slate-200' : 'text-slate-600'}`}
                 >
                   <X size={24} />
                 </button>
@@ -243,27 +319,40 @@ function App() {
                   }
                 ].map(({ ref, label, defaultValue }) => (
                   <div key={label} className="flex justify-between items-center text-sm">
-                    <label className="text-slate-700 text-left">{label}</label>
+                    <label className={`${isDarkMode ? 'text-slate-300' : 'text-slate-700'}`}>
+                      {label}
+                    </label>
                     <div className="flex items-center w-4/12">
                       <button
                         type="button"
-                        className="p-2 rounded-l bg-slate-200 hover:bg-slate-300 transition-colors"
+                        className={`p-2 rounded-l
+                          ${
+                            isDarkMode
+                              ? 'bg-slate-700 text-slate-300'
+                              : 'bg-slate-200 text-slate-800'
+                          }`}
                         onClick={() => ref.current.stepDown()}
                       >
-                        <ChevronLeft size={16} className="text-slate-800" />
+                        <ChevronLeft size={16} />
                       </button>
                       <input
                         ref={ref}
                         type="number"
                         defaultValue={defaultValue}
-                        className="w-full p-2 text-center border-slate-300 text-slate-900"
+                        className={`w-full p-2 text-center
+                          ${isDarkMode ? 'text-slate-200' : 'border-slate-300 text-slate-900'}`}
                       />
                       <button
                         type="button"
-                        className="p-2 rounded-r bg-slate-200 hover:bg-slate-300 transition-colors"
+                        className={`p-2 rounded-r 
+                          ${
+                            isDarkMode
+                              ? 'bg-slate-700 text-slate-300'
+                              : 'bg-slate-200 text-slate-800'
+                          }`}
                         onClick={() => ref.current.stepUp()}
                       >
-                        <ChevronRight size={16} className="text-slate-800" />
+                        <ChevronRight size={16} />
                       </button>
                     </div>
                   </div>
@@ -272,7 +361,8 @@ function App() {
               <div className="mt-4">
                 <button
                   onClick={handleSaveSettings}
-                  className="w-full py-2 rounded bg-slate-800 text-white hover:bg-slate-700 transition-colors"
+                  className={`w-full py-2 rounded
+                    ${isDarkMode ? 'bg-slate-300 text-slate-800' : 'bg-slate-800 text-white'}`}
                 >
                   Save
                 </button>
@@ -280,16 +370,6 @@ function App() {
             </div>
           </div>
         )}
-
-        {/* settings icon */}
-        <div className="fixed bottom-4 right-4">
-          <button
-            onClick={() => setIsSettingsOpen(true)}
-            className="p-3 rounded-full shadow-lg bg-slate-800 text-white hover:bg-slate-700 transition-colors"
-          >
-            <Settings />
-          </button>
-        </div>
       </div>
     </div>
   )

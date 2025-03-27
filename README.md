@@ -6,7 +6,9 @@ A cross-platform desktop Pomodoro Timer application built with Electron and Reac
 ## Screenshot
 
 ### Main Interface & Settings
-![ain Interface & Settings](/readme-assets/desktop-timer-mockup.png)
+![Main Interface & Settings / Light Mode](/readme-assets/desktop-timer-light.png)
+![Main Interface & Settings / Dark Mode](/readme-assets/desktop-timer-dark.png)
+
 
 ## Features
 - 🕒 Customizable Timer Settings
