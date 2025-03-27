@@ -62,23 +62,3 @@ npm run build:mac
 # For Linux
 npm run build:linux
 ```
-
-## How to Use
-1. Click the play button to start the timer
-2. Pause or reset as needed
-3. Customize timer settings via the gear icon
-4. Complete focus sessions and take breaks
-
-## Customization
-- Adjust focus and break durations
-- Set number of sessions before a long break
-- Personalize your productivity workflow
-
-## Contributing
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-## License
-This project is open source and available under the MIT License.
-
-## About the Pomodoro Technique
-The Pomodoro Technique is a time management method that uses a timer to break work into intervals, traditionally 25 minutes in length, separated by short breaks. This technique aims to enhance focus and productivity by reducing mental fatigue.
