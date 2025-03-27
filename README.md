@@ -25,6 +25,8 @@ A cross-platform desktop Pomodoro Timer application built with Electron and Reac
 - 💻 Desktop Integration
   - Cross-platform support (Windows, macOS, Linux)
   - Native desktop application experience
+- 🚀 Additional Features
+  - Customizable themes
 
 ## Recommended IDE Setup
 - [VSCode](https://code.visualstudio.com/)
